@@ -19,3 +19,4 @@ Format:
 ## Third party
 * https://github.com/nlohmann/json
 * https://www.qt.io
+* https://www.openssl.org
