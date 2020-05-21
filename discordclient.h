@@ -32,6 +32,8 @@ public:
 		  m_heartbeat(new QTimer),
 		  m_websocket(new QWebSocket)
 	{
+		m_sequenceNumber = 0;
+
 		connect(m_websocket, &QWebSocket::disconnected, this, &DiscordClient::connectionClosed);
 		connect(m_websocket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::error), this, &DiscordClient::connectionError);
 		connect(m_websocket, &QWebSocket::textMessageReceived, this, &DiscordClient::messageReceived);
@@ -46,6 +48,8 @@ public:
 
 private:
 	bool m_loggedIn;
+	int m_sequenceNumber;
+	QString m_sessionId;
 	QString m_token;
 	User m_user;
 

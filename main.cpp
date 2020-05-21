@@ -43,13 +43,16 @@ int main(int argc, char *argv[])
 
 		a.connect(client, &DiscordClient::onMessage, &a, [&](const Message& message)
 		{
-			if (!message.content.contains("discord.gift/")) return;
+			if (!message.content.contains("discord.gift/") && !message.content.contains("discordapp.com/gifts/") && !message.content.contains("discord.com/gifts")) return;
 
 			a.connect(mgr, &QNetworkAccessManager::finished, &a, [&](QNetworkReply* reply)
 			{
 				a.disconnect(mgr, &QNetworkAccessManager::finished, &a, nullptr);
 				qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 				QString replyText = reply->readAll();
+
+				// Actually I have no idea of how u can know if the code was valid, pls create an issue if you can help
+
 				if (nlohmann::json::parse(replyText.toStdString())["code"] != nullptr)
 					switch (static_cast<Constants::DiscordAPI::redeemResponseErrorCode>(nlohmann::json::parse(replyText.toStdString())["code"].get<int>()))
 					{
@@ -64,8 +67,11 @@ int main(int argc, char *argv[])
 					qDebug() << "Successfully redeemed";
 			});
 
-			qDebug() << "caca";
-			QRegExp reg("(?:discord.gift/\\S+)");
+			// For :
+			// discord.gift/code
+			// discord.com/gifts/code
+			// discordapp.com/gifts/code
+			QRegExp reg("(?:discord(.gift|.com/gifts|app.com/gifts)/\\S+)");
 			reg.indexIn(message.content);
 			QString code = reg.cap().split("/").back();
 			QString url = "https://discordapp.com/api/v6/entitlements/gift-codes/"+code+"/redeem";
