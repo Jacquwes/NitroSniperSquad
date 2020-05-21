@@ -47,7 +47,7 @@ void DiscordClient::messageReceived(const QString& message)
 			m_user.discriminator = payload["d"]["user"]["discriminator"].get<std::string>().c_str();
 			emit onReady(m_user);
 		}
-		else if (eventName == "MESSAGE_CREATE" || eventName == "MESSAGE_UPDATE")
+		else if (eventName == "MESSAGE_CREATE")
 		{
 			User author;
 			author.id = payload["d"]["author"]["id"].get<std::string>().c_str();
@@ -133,7 +133,6 @@ void DiscordClient::connectionError(QAbstractSocket::SocketError error)
 
 void DiscordClient::sendHeartbeat()
 {
-	qDebug() << "Heartbeat sent";
 	nlohmann::json payload;
 	payload["op"] = static_cast<int>(Constants::Gateway::OpCode::HEARTBEAT);
 	payload["d"] = m_sequenceNumber;
