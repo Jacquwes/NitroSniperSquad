@@ -3,6 +3,12 @@ Maybe the most performant Nitro Sniper on GitHub.
 
 It uses multiple tokens to seek for nitros, but all the gift requests are executed with the same one.
 
+# New
+- Can detect links beginning with `discord.com/gifts/<code>`, `discordapp.com/gifts/<code>`, `discord.gift/<code>`
+- Handles heartbeat perfectly
+- Handles reconnection for long sessions (so you don't miss any message)
+- Whole code cleaning
+
 ## Build
 Open `NitroSniper.pro` with Qt Creator, and click on build.
 
