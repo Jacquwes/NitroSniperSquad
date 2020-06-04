@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 			// discordapp.com/gifts/code
 			QRegExp reg("(?:discord(.gift|.com/gifts|app.com/gifts)/\\S+)");
 			reg.indexIn(message.content);
-			QString code = reg.cap().split("/").back();
+			QString code = reg.cap().split("/").back().replace(QString("&"), QString(""));
 			QString url = "https://discordapp.com/api/v6/entitlements/gift-codes/"+code+"/redeem";
 			QNetworkRequest *req = new QNetworkRequest(QUrl(url));
 			req->setRawHeader("Authorization", tokens[0].toUtf8());
