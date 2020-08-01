@@ -104,8 +104,7 @@ int main(int argc, char *argv[])
 						   .split("!").front()
 						   .split("@").front()
 						   .split("&").front()
-						   .split("?").front()
-						   .replace(QString("&"), QString(""));
+						   .split("?").front();
 
 			// Verify code size
 			// Thanks @Jev1337
