@@ -7,12 +7,24 @@ namespace Constants {
 namespace DiscordAPI {
 	inline QString baseURL() { return "https://discord.com/api"; }
 	inline QString gatewayURI() { return baseURL() + "/gateway"; }
+
 	enum class redeemResponseErrorCode
 	{
 		INVALID = 10038,
 		ALREADY_REDEEMED = 50050,
 	};
+
+	// Thanks @Jev1337
+	enum class redeemHttpResponseCode
+	{
+		Valid = 200,
+		Error = 405,
+		Invalid = 404,
+		Expired = 400,
+		RateLimited = 429,
+	};
 }
+
 namespace Gateway {
 	enum class OpCode
 	{
