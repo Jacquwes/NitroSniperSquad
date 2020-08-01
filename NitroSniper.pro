@@ -27,5 +27,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     constants.h \
     discordclient.h \
-    json.hpp \
     utils.h

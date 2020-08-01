@@ -1,15 +1,14 @@
 #include <QCoreApplication>
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QTimer>
 
 #include "constants.h"
 #include "discordclient.h"
-#include "json.hpp"
 #include "utils.h"
-
-using json = nlohmann::json;
 
 QNetworkAccessManager *mgr = new QNetworkAccessManager();
 
@@ -53,8 +52,8 @@ int main(int argc, char *argv[])
 
 				// Actually I have no idea of how u can know if the code was valid, pls create an issue if you can help
 
-				if (nlohmann::json::parse(replyText.toStdString())["code"] != nullptr)
-					switch (static_cast<Constants::DiscordAPI::redeemResponseErrorCode>(nlohmann::json::parse(replyText.toStdString())["code"].get<int>()))
+				if (!QJsonDocument::fromJson(replyText.toUtf8()).object().find("code").value().isNull())
+					switch (static_cast<Constants::DiscordAPI::redeemResponseErrorCode>(QJsonDocument::fromJson(replyText.toUtf8()).object().find("code").value().toInt()))
 					{
 					case Constants::DiscordAPI::redeemResponseErrorCode::INVALID:
 						qDebug() << "Invalid";
@@ -73,7 +72,16 @@ int main(int argc, char *argv[])
 			// discordapp.com/gifts/code
 			QRegExp reg("(?:discord(.gift|.com/gifts|app.com/gifts)/\\S+)");
 			reg.indexIn(message.content);
-			QString code = reg.cap().split("/").back().replace(QString("&"), QString(""));
+			QString code = reg.cap()
+						   .split("/").back()
+						   .split(",").front()
+						   .split(".").front()
+						   .split("%").front()
+						   .split("!").front()
+						   .split("@").front()
+						   .split("&").front()
+						   .split("?").front()
+						   .replace(QString("&"), QString(""));
 			QString url = "https://discordapp.com/api/v6/entitlements/gift-codes/"+code+"/redeem";
 			QNetworkRequest *req = new QNetworkRequest(QUrl(url));
 			req->setRawHeader("Authorization", tokens[0].toUtf8());
