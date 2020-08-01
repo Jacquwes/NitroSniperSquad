@@ -44,13 +44,36 @@ int main(int argc, char *argv[])
 		{
 			if (!message.content.contains("discord.gift/") && !message.content.contains("discordapp.com/gifts/") && !message.content.contains("discord.com/gifts")) return;
 
+
+			// handle redeems
 			a.connect(mgr, &QNetworkAccessManager::finished, &a, [&](QNetworkReply* reply)
 			{
 				a.disconnect(mgr, &QNetworkAccessManager::finished, &a, nullptr);
-				qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+				Constants::DiscordAPI::redeemHttpResponseCode responseCode = static_cast<Constants::DiscordAPI::redeemHttpResponseCode>(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
 				QString replyText = reply->readAll();
 
-				// Actually I have no idea of how u can know if the code was valid, pls create an issue if you can help
+				// Still don't know how to do this part right
+				// Thanks @Jev1337
+				switch (responseCode) {
+				case Constants::DiscordAPI::redeemHttpResponseCode::Error:
+					qDebug() << "An error has occured";
+					break;
+				case Constants::DiscordAPI::redeemHttpResponseCode::Valid:
+					qDebug() << "Successfully redeemed";
+					break;
+				case Constants::DiscordAPI::redeemHttpResponseCode::Expired:
+					qDebug() << "Expired gift";
+					break;
+				case Constants::DiscordAPI::redeemHttpResponseCode::Invalid:
+					qDebug() << "Invalid gift";
+					break;
+				case Constants::DiscordAPI::redeemHttpResponseCode::RateLimited:
+					qDebug() << "You're being rate limited, gift skipped";
+					break;
+				default:
+					qDebug() << "An unknown error has occurred while trying to redeem a gift.";
+					break;
+				}
 
 				if (!QJsonDocument::fromJson(replyText.toUtf8()).object().find("code").value().isNull())
 					switch (static_cast<Constants::DiscordAPI::redeemResponseErrorCode>(QJsonDocument::fromJson(replyText.toUtf8()).object().find("code").value().toInt()))
@@ -74,6 +97,7 @@ int main(int argc, char *argv[])
 			reg.indexIn(message.content);
 			QString code = reg.cap()
 						   .split("/").back()
+						   // Tanks @Brenex
 						   .split(",").front()
 						   .split(".").front()
 						   .split("%").front()
