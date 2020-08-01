@@ -28,3 +28,7 @@ HEADERS += \
     constants.h \
     discordclient.h \
     utils.h
+
+DISTFILES += \
+    LICENSE \
+    README.md
