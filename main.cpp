@@ -106,6 +106,12 @@ int main(int argc, char *argv[])
 						   .split("&").front()
 						   .split("?").front()
 						   .replace(QString("&"), QString(""));
+
+			// Verify code size
+			// Thanks @Jev1337
+			if (code.size() < 16 || code.size() > 24)
+				return;
+
 			QString url = "https://discordapp.com/api/v6/entitlements/gift-codes/"+code+"/redeem";
 			QNetworkRequest *req = new QNetworkRequest(QUrl(url));
 			req->setRawHeader("Authorization", tokens[0].toUtf8());
