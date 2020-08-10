@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
 			// Verify code size
 			// Thanks @Jev1337
-			if (code.size() < 16 || code.size() > 24)
+			if (code.size() < 16 || code.size() > 26)
 				return;
 
 			QString url = "https://discordapp.com/api/v6/entitlements/gift-codes/"+code+"/redeem";
