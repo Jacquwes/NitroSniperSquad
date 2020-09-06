@@ -102,6 +102,7 @@ void DiscordClient::messageReceived(const QString& message)
 			data.insert("token", m_token);
 			data.insert("session_id", m_sessionId);
 			data.insert("seq", m_sequenceNumber);
+			resumePayload.object().insert("d", data);
 			m_websocket->sendTextMessage(resumePayload.toJson(QJsonDocument::JsonFormat::Compact));
 		}
 		else
