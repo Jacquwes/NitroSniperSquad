@@ -1,3 +1,5 @@
+Probably obsolete and won't be updated
+
 # NitroSniperSquad
 
 Maybe the most performant Nitro Sniper on GitHub.
